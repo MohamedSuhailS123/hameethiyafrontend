@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const password = document.getElementById("password").value;
             const errorMessage = document.getElementById("errorMessage");
 
-            fetch("http://localhost:5000/login", {
+            fetch("https://suhail-rho.vercel.app/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ loginId, password })
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const password = document.getElementById("password").value;
             const errorMessage = document.getElementById("errorMessage");
 
-            fetch("http://localhost:5000/register", {
+            fetch("https://suhail-rho.vercel.app/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, email, password })
