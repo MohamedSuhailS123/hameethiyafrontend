@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Management Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #1a237e;
+            --primary-light: #534bae;
+            --primary-dark: #000051;
+            --secondary-color: #ffab00;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #757575;
+            --white: #ffffff;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #989ff5, #02193b);
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            color: #fff;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 1600px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header {
+            background: linear-gradient(to right, rgba(26, 35, 126, 0.9), rgba(13, 71, 161, 0.9));
+            margin: -2rem -2rem 2rem -2rem;
+            padding: 2rem 3rem;
+            border-radius: 30px 30px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+        
+        .header h1 {
+            color: white;
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .settings-button, .back-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .settings-button:hover, .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.3);
+        }
+        
+        .stat-card i {
+            font-size: 2.5rem;
+            color: #ffffff;
+            opacity: 0.9;
+        }
+        
+        .stat-info h3 {
+            color: #ffffff;
+            opacity: 0.9;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-info span {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+        
+        .module-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2.8rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align: center;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(31, 38, 135, 0.25);
+        }
+        
+        .module-card i {
+            font-size: 3.2rem;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            transition: transform 0.3s ease;
+        }
+        
+        .module-card:hover i {
+            transform: scale(1.1);
+        }
+        
+        .module-card span {
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+        }
+        
+        .count-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .module-card:hover .count-badge {
+            background: var(--primary-color);
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+        
+        /* Settings Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .modal-content {
+            background: linear-gradient(145deg, #ffffff, #f5f5f5);
+            margin: 5% auto;
+            padding: 3rem 2rem 2rem;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            color: #333;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .close:hover {
+            color: #e74c3c;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+            border-color: #e74c3c;
+        }
+        
+        .settings-section {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .settings-section h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .settings-section h3 {
+            color: #34495e;
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .form-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-group input {
+            flex: 1;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+            outline: none;
+        }
+        
+        .add-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        
+        .add-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        }
+        
+        .item-list {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin: 0.8rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .item-list span {
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+        
+        .delete-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .delete-btn:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 68, 68, 0.2);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .modules {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 1.5rem;
+                padding: 1rem;
+            }
+            
+            .module-card {
+                padding: 2rem 1rem;
+            }
+            
+            .module-card i {
+                font-size: 2.8rem;
+            }
+            
+            .module-card span {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-button" onclick="window.location.href='../Licence/license-services.html'">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <h1>Fresh License Management</h1>
+            <button class="settings-button" onclick="toggleSettings()">
+                <i class="fas fa-cog"></i> Settings
+            </button>
+        </div>
+        
+        <!-- Dashboard Stats -->
+        <div class="dashboard">
+            <div class="stat-card">
+                <i class="fas fa-file-alt"></i>
+                <div class="stat-info">
+                    <h3>Total Applications</h3>
+                    <span id="totalCount">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <div class="stat-info">
+                    <h3>LLR Pending Tasks</h3>
+                    <span id="pendingCount">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-check-circle"></i>
+                <div class="stat-info">
+                    <h3>LLR Issued</h3>
+                    <span id="llrCount">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-calendar-check"></i>
+                <div class="stat-info">
+                    <h3>Test Applications</h3>
+                    <span id="testCount">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modules Grid -->
+        <div class="modules">
+            <div class="module-card" onclick="window.location.href='create-license-task.html'">
+                <i class="fas fa-file-plus"></i>
+                <span>Create Task</span>
+                <div class="count-badge" id="createTaskCount">0</div>
+            </div>
+            <div class="module-card" onclick="window.location.href='update-task-status.html'">
+                <i class="fas fa-tasks"></i>
+                <span>Update Status</span>
+                <div class="count-badge" id="updateStatusCount">0</div>
+            </div>
+            <div class="module-card" onclick="window.location.href='check-task-status.html'">
+                <i class="fas fa-search"></i>
+                <span>Check Status</span>
+                <div class="count-badge" id="checkStatusCount">0</div>
+            </div>
+            <div class="module-card" onclick="window.location.href='matured-llr.html'">
+                <i class="fas fa-id-card"></i>
+                <span>Matured LLR</span>
+                <div class="count-badge" id="maturedLlrCount">0</div>
+            </div>
+            <div class="module-card" onclick="window.location.href='license-payment.html'">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Payment</span>
+                <div class="count-badge" id="paymentCount">0</div>
+            </div>
+            <div class="module-card" onclick="window.location.href='test-applications.html'">
+                <i class="fas fa-clipboard-check"></i>
+                <span>Test Applications</span>
+                <div class="count-badge" id="testAppCount">0</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleSettings()">&times;</span>
+            <h2>Settings</h2>
+            
+            <!-- Status Management Section -->
+            <div class="settings-section">
+                <h3>Status Management</h3>
+                <div class="form-group">
+                    <input type="text" id="newStatus" placeholder="Add new status">
+                    <button onclick="addNewStatus()" class="add-btn">Add Status</button>
+                </div>
+                <div id="statusList"></div>
+            </div>
+
+            <!-- Vehicle Class Management Section -->
+            <div class="settings-section">
+                <h3>Vehicle Class Management</h3>
+                <div class="form-group">
+                    <input type="text" id="newVehicleClass" placeholder="Add new vehicle class">
+                    <button onclick="addNewVehicleClass()" class="add-btn">Add Vehicle Class</button>
+                </div>
+                <div id="vehicleClassList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle settings modal
+        function toggleSettings() {
+            const modal = document.getElementById('settingsModal');
+            modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+            if (modal.style.display === 'block') {
+                updateStatusList();
+                updateVehicleClassList();
+            }
+        }
+
+        // Add new status
+        function addNewStatus() {
+            const newStatusInput = document.getElementById('newStatus');
+            const newStatus = newStatusInput.value.trim();
+            
+            if (newStatus) {
+                let statuses = JSON.parse(localStorage.getItem('freshLicenseStatuses') || '[]');
+                if (!statuses.includes(newStatus)) {
+                    statuses.push(newStatus);
+                    localStorage.setItem('freshLicenseStatuses', JSON.stringify(statuses));
+                    newStatusInput.value = '';
+                    updateStatusList();
+                }
+            }
+        }
+
+        // Add new vehicle class
+        function addNewVehicleClass() {
+            const newClassInput = document.getElementById('newVehicleClass');
+            const newClass = newClassInput.value.trim();
+            
+            if (newClass) {
+                let vehicleClasses = JSON.parse(localStorage.getItem('createLicenseVehicleClasses') || '[]');
+                if (!vehicleClasses.includes(newClass)) {
+                    vehicleClasses.push(newClass);
+                    localStorage.setItem('createLicenseVehicleClasses', JSON.stringify(vehicleClasses));
+                    newClassInput.value = '';
+                    updateVehicleClassList();
+                }
+            }
+        }
+
+        // Update status list in modal
+        function updateStatusList() {
+            const statuses = JSON.parse(localStorage.getItem('freshLicenseStatuses') || [];
+            const statusList = document.getElementById('statusList');
+            
+            statusList.innerHTML = statuses.map(status => `
+                <div class="item-list">
+                    <span>${status}</span>
+                    <button class="delete-btn" onclick="deleteStatus('${status}')">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        // Update vehicle class list in modal
+        function updateVehicleClassList() {
+            const vehicleClasses = JSON.parse(localStorage.getItem('createLicenseVehicleClasses') || [];
+            const vehicleClassList = document.getElementById('vehicleClassList');
+            
+            vehicleClassList.innerHTML = vehicleClasses.map(vehicleClass => `
+                <div class="item-list">
+                    <span>${vehicleClass}</span>
+                    <button class="delete-btn" onclick="deleteVehicleClass('${vehicleClass}')">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        // Delete status
+        function deleteStatus(status) {
+            let statuses = JSON.parse(localStorage.getItem('freshLicenseStatuses') || [];
+            statuses = statuses.filter(s => s !== status);
+            localStorage.setItem('freshLicenseStatuses', JSON.stringify(statuses));
+            updateStatusList();
+        }
+
+        // Delete vehicle class
+        function deleteVehicleClass(vehicleClass) {
+            let vehicleClasses = JSON.parse(localStorage.getItem('createLicenseVehicleClasses') || [];
+            vehicleClasses = vehicleClasses.filter(v => v !== vehicleClass);
+            localStorage.setItem('createLicenseVehicleClasses', JSON.stringify(vehicleClasses));
+            updateVehicleClassList();
+        }
+
+        // Update dashboard counts
+        function updateDashboardCounts() {
+            const tasks = JSON.parse(localStorage.getItem('freshLicenseTasks')) || [];
+            
+            // Update total count
+            document.getElementById('totalCount').textContent = tasks.length;
+            
+            // Update pending count (excluding LLR Issued)
+            const pendingCount = tasks.filter(task => 
+                task.status !== 'LLR Issued' && task.status !== 'Returned' && 
+                task.status !== 'Test Completed' && task.status !== 'Test Application Generated'
+            ).length;
+            document.getElementById('pendingCount').textContent = pendingCount;
+            
+            // Update LLR issued count
+            const llrCount = tasks.filter(task => task.status === 'LLR Issued').length;
+            document.getElementById('llrCount').textContent = llrCount;
+            
+            // Update test applications count
+            const testCount = tasks.filter(task => task.status === 'Test Application Generated').length;
+            document.getElementById('testCount').textContent = testCount;
+            
+            // Update module badge counts
+            document.getElementById('createTaskCount').textContent = tasks.length;
+            document.getElementById('updateStatusCount').textContent = pendingCount;
+            document.getElementById('checkStatusCount').textContent = tasks.length;
+            document.getElementById('maturedLlrCount').textContent = llrCount;
+            document.getElementById('paymentCount').textContent = tasks.filter(t => t.advancePayment > 0).length;
+            document.getElementById('testAppCount').textContent = testCount;
+        }
+
+        // Initialize default values if not exists
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('freshLicenseStatuses')) {
+                localStorage.setItem('freshLicenseStatuses', JSON.stringify([
+                    'New Application', 
+                    'Documents Verified',
+                    'Application Generated',
+                    'Test Scheduled',
+                    'Test Completed',
+                    'LLR Issued',
+                    'Returned'
+                ]));
+            }
+            
+            if (!localStorage.getItem('createLicenseVehicleClasses')) {
+                localStorage.setItem('createLicenseVehicleClasses', JSON.stringify([
+                    'MCWG', 'MCWOG', 'LMV', 'HMV', 'HPMV', 'TRANS'
+                ]));
+            }
+            
+            updateDashboardCounts();
+        });
+    </script>
+</body>
+</html>
